@@ -1,0 +1,84 @@
+#pragma once
+#include "Protocol.pb.h"
+
+using PacketHandlerFunc = std::function<bool(PacketSessionRef&, BYTE*, int32)>;
+extern PacketHandlerFunc GPacketHandler[UINT16_MAX];
+
+enum : uint16
+{
+	PKT_C_LOGIN = 1000,
+	PKT_C_RECONNECT = 1001,
+	PKT_S_LOGIN_FAIL = 1002,
+	PKT_S_ENTER = 1003,
+	PKT_C_CHAT = 1004,
+	PKT_S_CHAT = 1005,
+	PKT_C_LEAVE = 1006,
+	PKT_S_LEAVE = 1007,
+	PKT_S_SPAWN = 1008,
+	PKT_S_DESPAWN = 1009,
+	PKT_C_PONG = 1010,
+	PKT_S_PING = 1011,
+};
+
+// Custom Handlers
+bool Handle_INVALID(PacketSessionRef& session, BYTE* buffer, int32 len);
+bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_LOGIN& pkt);
+bool Handle_C_RECONNECT(PacketSessionRef& session, Protocol::C_RECONNECT& pkt);
+bool Handle_C_CHAT(PacketSessionRef& session, Protocol::C_CHAT& pkt);
+bool Handle_C_LEAVE(PacketSessionRef& session, Protocol::C_LEAVE& pkt);
+bool Handle_C_PONG(PacketSessionRef& session, Protocol::C_PONG& pkt);
+
+class ClientPacketHandler
+{
+public:
+	static void Init()
+	{
+		for (int32 i = 0; i < UINT16_MAX; i++)
+			GPacketHandler[i] = Handle_INVALID;
+		GPacketHandler[PKT_C_LOGIN] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_LOGIN>(Handle_C_LOGIN, session, buffer, len); };
+		GPacketHandler[PKT_C_RECONNECT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_RECONNECT>(Handle_C_RECONNECT, session, buffer, len); };
+		GPacketHandler[PKT_C_CHAT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_CHAT>(Handle_C_CHAT, session, buffer, len); };
+		GPacketHandler[PKT_C_LEAVE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_LEAVE>(Handle_C_LEAVE, session, buffer, len); };
+		GPacketHandler[PKT_C_PONG] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_PONG>(Handle_C_PONG, session, buffer, len); };
+	}
+
+	static bool HandlePacket(PacketSessionRef& session, BYTE* buffer, int32 len)
+	{
+		PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
+		return GPacketHandler[header->id](session, buffer, len);
+	}
+	static SendBufferRef MakeSendBuffer(Protocol::S_LOGIN_FAIL& pkt) { return MakeSendBuffer(pkt, PKT_S_LOGIN_FAIL); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_ENTER& pkt) { return MakeSendBuffer(pkt, PKT_S_ENTER); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_CHAT& pkt) { return MakeSendBuffer(pkt, PKT_S_CHAT); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_LEAVE& pkt) { return MakeSendBuffer(pkt, PKT_S_LEAVE); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_SPAWN& pkt) { return MakeSendBuffer(pkt, PKT_S_SPAWN); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_DESPAWN& pkt) { return MakeSendBuffer(pkt, PKT_S_DESPAWN); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_PING& pkt) { return MakeSendBuffer(pkt, PKT_S_PING); }
+
+private:
+	template<typename PacketType, typename ProcessFunc>
+	static bool HandlePacket(ProcessFunc func, PacketSessionRef& session, BYTE* buffer, int32 len)
+	{
+		PacketType pkt;
+		if (pkt.ParseFromArray(buffer + sizeof(PacketHeader), len - sizeof(PacketHeader)) == false)
+			return false;
+
+		return func(session, pkt);
+	}
+
+	template<typename T>
+	static SendBufferRef MakeSendBuffer(T & pkt, uint16 pktId)
+	{
+		const uint16 dataSize = static_cast<uint16>(pkt.ByteSizeLong());
+		const uint16 packetSize = dataSize + sizeof(PacketHeader);
+
+		SendBufferRef sendBuffer = GSendBufferManager->Open(packetSize);
+		PacketHeader* header = reinterpret_cast<PacketHeader*>(sendBuffer->Buffer());
+		header->size = packetSize;
+		header->id = pktId;
+		ASSERT_CRASH(pkt.SerializeToArray(&header[1], dataSize));
+		sendBuffer->Close(packetSize);
+
+		return sendBuffer;
+	}
+};

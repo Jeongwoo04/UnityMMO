@@ -1,0 +1,71 @@
+syntax = "proto3";
+package Protocol;
+
+import "Enum.proto";
+
+message C_LOGIN
+{
+	string name = 1;
+}
+
+message C_RECONNECT
+{
+	string name = 1;
+	int64 last_serial = 2;
+}
+
+message S_LOGIN_FAIL
+{
+	Cause cause = 1;
+	string message = 2;
+}
+
+message S_ENTER
+{
+	uint64 player_id = 1;
+	string name = 2;
+	repeated PlayerInfo players = 3;
+}
+
+message C_CHAT {
+	string message = 1;
+}
+
+message S_CHAT {
+	int32 message_id = 1;
+	uint64 player_id = 2;
+	string name = 3;
+	string message = 4;
+	int64 timestamp = 5;
+	int64 serial = 6; // Room ³» ¼ø¹ø
+}
+
+message C_LEAVE {
+
+}
+
+message S_LEAVE {
+	uint64 player_id = 1;
+}
+
+message S_SPAWN {
+	uint64 player_id = 1;
+	string name = 2;
+}
+
+message S_DESPAWN {
+	uint64 player_id = 1;
+}
+
+message C_PONG {
+	uint64 timestamp = 1;
+}
+
+message S_PING {
+	uint64 timestamp = 1;
+}
+
+message PlayerInfo {
+	uint64 player_id = 1;
+	string name = 2;
+}

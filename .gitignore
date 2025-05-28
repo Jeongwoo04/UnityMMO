@@ -64,6 +64,19 @@ sysinfo.txt
 *.unitypackage.meta
 *.app
 
+# Build files
+**/Debug/
+**/Release/
+*.pch
+*.lib
+*.obj
+*.pdb
+*.exe
+*.dll
+*.log
+*.ipch
+*.VC.db
+
 # Crashlytics generated file
 crashlytics-build.properties
 
