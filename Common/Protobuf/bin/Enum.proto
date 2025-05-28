@@ -1,0 +1,9 @@
+syntax = "proto3";
+package Protocol;
+
+enum Cause {
+	NONE = 0;
+	INVAILD_NAME = 1;
+	DB_ERROR = 2;
+	ALREADY_LOGGED_IN = 3;
+}
