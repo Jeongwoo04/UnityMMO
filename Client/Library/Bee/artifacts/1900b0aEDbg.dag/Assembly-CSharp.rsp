@@ -383,6 +383,7 @@
 "Assets/Scripts/Managers/Core/UIManager.cs"
 "Assets/Scripts/Managers/Managers.cs"
 "Assets/Scripts/Packet/ClientPacketManager.cs"
+"Assets/Scripts/Packet/Enum.cs"
 "Assets/Scripts/Packet/PacketHandler.cs"
 "Assets/Scripts/Packet/PacketQueue.cs"
 "Assets/Scripts/Packet/Protocol.cs"
