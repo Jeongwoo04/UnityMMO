@@ -14,51 +14,122 @@
 #include <google/protobuf/wire_format.h>
 // @@protoc_insertion_point(includes)
 #include <google/protobuf/port_def.inc>
-
-PROTOBUF_PRAGMA_INIT_SEG
-
-namespace _pb = ::PROTOBUF_NAMESPACE_ID;
-namespace _pbi = _pb::internal;
-
 namespace Protocol {
 }  // namespace Protocol
-static const ::_pb::EnumDescriptor* file_level_enum_descriptors_Enum_2eproto[1];
-static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_Enum_2eproto = nullptr;
-const uint32_t TableStruct_Enum_2eproto::offsets[1] = {};
-static constexpr ::_pbi::MigrationSchema* schemas = nullptr;
-static constexpr ::_pb::Message* const* file_default_instances = nullptr;
+static constexpr ::PROTOBUF_NAMESPACE_ID::Metadata* file_level_metadata_Enum_2eproto = nullptr;
+static const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* file_level_enum_descriptors_Enum_2eproto[5];
+static constexpr ::PROTOBUF_NAMESPACE_ID::ServiceDescriptor const** file_level_service_descriptors_Enum_2eproto = nullptr;
+const ::PROTOBUF_NAMESPACE_ID::uint32 TableStruct_Enum_2eproto::offsets[1] = {};
+static constexpr ::PROTOBUF_NAMESPACE_ID::internal::MigrationSchema* schemas = nullptr;
+static constexpr ::PROTOBUF_NAMESPACE_ID::Message* const* file_default_instances = nullptr;
 
 const char descriptor_table_protodef_Enum_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\nEnum.proto\022\010Protocol*H\n\005Cause\022\010\n\004NONE\020"
-  "\000\022\020\n\014INVAILD_NAME\020\001\022\014\n\010DB_ERROR\020\002\022\025\n\021ALR"
-  "EADY_LOGGED_IN\020\003b\006proto3"
+  "\n\nEnum.proto\022\010Protocol*\225\001\n\005MsgId\022\020\n\014S_EN"
+  "TER_GAME\020\000\022\020\n\014S_LEAVE_GAME\020\001\022\013\n\007S_SPAWN\020"
+  "\002\022\r\n\tS_DESPAWN\020\003\022\n\n\006C_MOVE\020\004\022\n\n\006S_MOVE\020\005"
+  "\022\013\n\007C_SKILL\020\006\022\013\n\007S_SKILL\020\007\022\017\n\013S_CHANGE_H"
+  "P\020\010\022\t\n\005S_DIE\020\t*:\n\rCreatureState\022\010\n\004IDLE\020"
+  "\000\022\n\n\006MOVING\020\001\022\t\n\005SKILL\020\002\022\010\n\004DEAD\020\003*0\n\007Mo"
+  "veDir\022\006\n\002UP\020\000\022\010\n\004DOWN\020\001\022\010\n\004LEFT\020\002\022\t\n\005RIG"
+  "HT\020\003*C\n\016GameObjectType\022\010\n\004NONE\020\000\022\n\n\006PLAY"
+  "ER\020\001\022\013\n\007MONSTER\020\002\022\016\n\nPROJECTILE\020\003*A\n\tSki"
+  "llType\022\016\n\nSKILL_NONE\020\000\022\016\n\nSKILL_AUTO\020\001\022\024"
+  "\n\020SKILL_PROJECTILE\020\002b\006proto3"
   ;
-static ::_pbi::once_flag descriptor_table_Enum_2eproto_once;
-const ::_pbi::DescriptorTable descriptor_table_Enum_2eproto = {
-    false, false, 104, descriptor_table_protodef_Enum_2eproto,
-    "Enum.proto",
-    &descriptor_table_Enum_2eproto_once, nullptr, 0, 0,
-    schemas, file_default_instances, TableStruct_Enum_2eproto::offsets,
-    nullptr, file_level_enum_descriptors_Enum_2eproto,
-    file_level_service_descriptors_Enum_2eproto,
+static const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable*const descriptor_table_Enum_2eproto_deps[1] = {
 };
-PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_Enum_2eproto_getter() {
-  return &descriptor_table_Enum_2eproto;
-}
+static ::PROTOBUF_NAMESPACE_ID::internal::SCCInfoBase*const descriptor_table_Enum_2eproto_sccs[1] = {
+};
+static ::PROTOBUF_NAMESPACE_ID::internal::once_flag descriptor_table_Enum_2eproto_once;
+const ::PROTOBUF_NAMESPACE_ID::internal::DescriptorTable descriptor_table_Enum_2eproto = {
+  false, false, descriptor_table_protodef_Enum_2eproto, "Enum.proto", 428,
+  &descriptor_table_Enum_2eproto_once, descriptor_table_Enum_2eproto_sccs, descriptor_table_Enum_2eproto_deps, 0, 0,
+  schemas, file_default_instances, TableStruct_Enum_2eproto::offsets,
+  file_level_metadata_Enum_2eproto, 0, file_level_enum_descriptors_Enum_2eproto, file_level_service_descriptors_Enum_2eproto,
+};
 
 // Force running AddDescriptors() at dynamic initialization time.
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_Enum_2eproto(&descriptor_table_Enum_2eproto);
+static bool dynamic_init_dummy_Enum_2eproto = (static_cast<void>(::PROTOBUF_NAMESPACE_ID::internal::AddDescriptors(&descriptor_table_Enum_2eproto)), true);
 namespace Protocol {
-const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* Cause_descriptor() {
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* MsgId_descriptor() {
   ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_Enum_2eproto);
   return file_level_enum_descriptors_Enum_2eproto[0];
 }
-bool Cause_IsValid(int value) {
+bool MsgId_IsValid(int value) {
   switch (value) {
     case 0:
     case 1:
     case 2:
     case 3:
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+    case 8:
+    case 9:
+      return true;
+    default:
+      return false;
+  }
+}
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* CreatureState_descriptor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_Enum_2eproto);
+  return file_level_enum_descriptors_Enum_2eproto[1];
+}
+bool CreatureState_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      return true;
+    default:
+      return false;
+  }
+}
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* MoveDir_descriptor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_Enum_2eproto);
+  return file_level_enum_descriptors_Enum_2eproto[2];
+}
+bool MoveDir_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      return true;
+    default:
+      return false;
+  }
+}
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* GameObjectType_descriptor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_Enum_2eproto);
+  return file_level_enum_descriptors_Enum_2eproto[3];
+}
+bool GameObjectType_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+      return true;
+    default:
+      return false;
+  }
+}
+
+const ::PROTOBUF_NAMESPACE_ID::EnumDescriptor* SkillType_descriptor() {
+  ::PROTOBUF_NAMESPACE_ID::internal::AssignDescriptors(&descriptor_table_Enum_2eproto);
+  return file_level_enum_descriptors_Enum_2eproto[4];
+}
+bool SkillType_IsValid(int value) {
+  switch (value) {
+    case 0:
+    case 1:
+    case 2:
       return true;
     default:
       return false;

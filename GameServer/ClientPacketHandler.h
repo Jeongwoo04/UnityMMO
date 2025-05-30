@@ -6,27 +6,22 @@ extern PacketHandlerFunc GPacketHandler[UINT16_MAX];
 
 enum : uint16
 {
-	PKT_C_LOGIN = 1000,
-	PKT_C_RECONNECT = 1001,
-	PKT_S_LOGIN_FAIL = 1002,
-	PKT_S_ENTER = 1003,
-	PKT_C_CHAT = 1004,
-	PKT_S_CHAT = 1005,
-	PKT_C_LEAVE = 1006,
-	PKT_S_LEAVE = 1007,
-	PKT_S_SPAWN = 1008,
-	PKT_S_DESPAWN = 1009,
-	PKT_C_PONG = 1010,
-	PKT_S_PING = 1011,
+	PKT_S_EnterGame = 0,
+	PKT_S_LeaveGame = 1,
+	PKT_S_Spawn = 2,
+	PKT_S_Despawn = 3,
+	PKT_C_Move = 4,
+	PKT_S_Move = 5,
+	PKT_C_Skill = 6,
+	PKT_S_Skill = 7,
+	PKT_S_ChangeHp = 8,
+	PKT_S_Die = 9,
 };
 
 // Custom Handlers
 bool Handle_INVALID(PacketSessionRef& session, BYTE* buffer, int32 len);
-bool Handle_C_LOGIN(PacketSessionRef& session, Protocol::C_LOGIN& pkt);
-bool Handle_C_RECONNECT(PacketSessionRef& session, Protocol::C_RECONNECT& pkt);
-bool Handle_C_CHAT(PacketSessionRef& session, Protocol::C_CHAT& pkt);
-bool Handle_C_LEAVE(PacketSessionRef& session, Protocol::C_LEAVE& pkt);
-bool Handle_C_PONG(PacketSessionRef& session, Protocol::C_PONG& pkt);
+bool Handle_C_Move(PacketSessionRef& session, Protocol::C_Move& pkt);
+bool Handle_C_Skill(PacketSessionRef& session, Protocol::C_Skill& pkt);
 
 class ClientPacketHandler
 {
@@ -35,11 +30,8 @@ public:
 	{
 		for (int32 i = 0; i < UINT16_MAX; i++)
 			GPacketHandler[i] = Handle_INVALID;
-		GPacketHandler[PKT_C_LOGIN] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_LOGIN>(Handle_C_LOGIN, session, buffer, len); };
-		GPacketHandler[PKT_C_RECONNECT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_RECONNECT>(Handle_C_RECONNECT, session, buffer, len); };
-		GPacketHandler[PKT_C_CHAT] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_CHAT>(Handle_C_CHAT, session, buffer, len); };
-		GPacketHandler[PKT_C_LEAVE] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_LEAVE>(Handle_C_LEAVE, session, buffer, len); };
-		GPacketHandler[PKT_C_PONG] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_PONG>(Handle_C_PONG, session, buffer, len); };
+		GPacketHandler[PKT_C_Move] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_Move>(Handle_C_Move, session, buffer, len); };
+		GPacketHandler[PKT_C_Skill] = [](PacketSessionRef& session, BYTE* buffer, int32 len) { return HandlePacket<Protocol::C_Skill>(Handle_C_Skill, session, buffer, len); };
 	}
 
 	static bool HandlePacket(PacketSessionRef& session, BYTE* buffer, int32 len)
@@ -47,13 +39,14 @@ public:
 		PacketHeader* header = reinterpret_cast<PacketHeader*>(buffer);
 		return GPacketHandler[header->id](session, buffer, len);
 	}
-	static SendBufferRef MakeSendBuffer(Protocol::S_LOGIN_FAIL& pkt) { return MakeSendBuffer(pkt, PKT_S_LOGIN_FAIL); }
-	static SendBufferRef MakeSendBuffer(Protocol::S_ENTER& pkt) { return MakeSendBuffer(pkt, PKT_S_ENTER); }
-	static SendBufferRef MakeSendBuffer(Protocol::S_CHAT& pkt) { return MakeSendBuffer(pkt, PKT_S_CHAT); }
-	static SendBufferRef MakeSendBuffer(Protocol::S_LEAVE& pkt) { return MakeSendBuffer(pkt, PKT_S_LEAVE); }
-	static SendBufferRef MakeSendBuffer(Protocol::S_SPAWN& pkt) { return MakeSendBuffer(pkt, PKT_S_SPAWN); }
-	static SendBufferRef MakeSendBuffer(Protocol::S_DESPAWN& pkt) { return MakeSendBuffer(pkt, PKT_S_DESPAWN); }
-	static SendBufferRef MakeSendBuffer(Protocol::S_PING& pkt) { return MakeSendBuffer(pkt, PKT_S_PING); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_EnterGame& pkt) { return MakeSendBuffer(pkt, PKT_S_EnterGame); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_LeaveGame& pkt) { return MakeSendBuffer(pkt, PKT_S_LeaveGame); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_Spawn& pkt) { return MakeSendBuffer(pkt, PKT_S_Spawn); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_Despawn& pkt) { return MakeSendBuffer(pkt, PKT_S_Despawn); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_Move& pkt) { return MakeSendBuffer(pkt, PKT_S_Move); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_Skill& pkt) { return MakeSendBuffer(pkt, PKT_S_Skill); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_ChangeHp& pkt) { return MakeSendBuffer(pkt, PKT_S_ChangeHp); }
+	static SendBufferRef MakeSendBuffer(Protocol::S_Die& pkt) { return MakeSendBuffer(pkt, PKT_S_Die); }
 
 private:
 	template<typename PacketType, typename ProcessFunc>

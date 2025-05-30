@@ -61,7 +61,7 @@ void DoRoomUpdateJob()
 	{
 		this_thread::sleep_for(chrono::milliseconds(ROOM_UPDATE_TICK));
 
-		GRoom->DoAsync(&Room::Update);
+		//GRoom->DoAsync(&Room::Update);
 	}
 }
 
