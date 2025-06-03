@@ -15,10 +15,13 @@
 #include "DBSynchronizer.h"
 #include "GenProcedures.h"
 #include "GlobalQueue.h"
+#include "ConfigManager.h"
+#include "DataManager.h"
 
 #include <fcntl.h>
 #include <io.h>
 #include <windows.h>
+#include "RoomManager.h"
 
 enum
 {
@@ -71,10 +74,19 @@ void InitConsole()
 	SetConsoleOutputCP(CP_UTF8);
 }
 
+#include <filesystem>
 int main()
 {
+	std::cout << "Current path: " << std::filesystem::current_path() << std::endl;
 	ServerGlobal::Init();
 	InitConsole();
+	ConfigManager::Instance().LoadConfig("config.json");
+	DataManager::Instance().LoadData("../Client/Assets/Resources/Data");
+
+	const auto& statDict = DataManager::Instance().StatDict; // 반환된 map 사용
+
+	RoomRef room = RoomManager::Instance().Add(1);
+
 
 
 	ASSERT_CRASH(GDBConnectionPool->Connect(4, L"Driver={SQL Server Native Client 11.0};Server=(localdb)\\MSSQLLocalDB;Database=ServerDb;Trusted_Connection=Yes;charset='UTF8'"));

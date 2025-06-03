@@ -5,10 +5,11 @@
 class GameSession : public PacketSession // sealed로 인해 OnRecv 사용불가
 {
 public:
-	GameSession(): _sessionId(GSessionIdGenerator.fetch_add(1))
+	GameSession()
 	{
 
 	}
+
 	~GameSession()
 	{
 		wcout << "~GameSession : SessionId = " << _sessionId << endl;
@@ -20,14 +21,12 @@ public:
 	virtual void	OnSend(int32 len) override;
 
 public:
-	uint64 GetSessionId() const { return _sessionId; }
-	uint64 GetLastPongTime() { return _lastPongTime; }
+	int32 GetSessionId() const { return _sessionId; }
+	void SetSessionId(int32 sessionId) { _sessionId = sessionId; }
+	//uint64 GetLastPongTime() { return _lastPongTime; }
 
 public:
-	PlayerRef				_currentPlayer; // 현재 어떤 Player로 접속을 하고 있는지
-	weak_ptr<Room>	_room; // room은 현재 없을수도 있으니 weak_ptr로 (자원을 할당 받아도 참조 카운트 영향X )
-	//id를 가지고 빠르게 dictionary / hash-table에서 가져와도 됨.
-
-	uint64 _sessionId;
-	uint64 _lastPongTime;
+	PlayerRef	_myPlayer;
+	int32		_sessionId;
+	//uint64 _lastPongTime;
 };

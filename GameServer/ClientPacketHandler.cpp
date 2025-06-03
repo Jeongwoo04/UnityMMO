@@ -23,10 +23,36 @@ bool Handle_INVALID(PacketSessionRef& session, BYTE* buffer, int32 len)
 
 bool Handle_C_Move(PacketSessionRef& session, Protocol::C_Move& pkt)
 {
-	return true;
+    GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
+    C_Move movePkt;
+
+    PlayerRef player = gameSession->_myPlayer;
+    if (player == nullptr)
+        return false;
+
+    RoomRef room = player->GetRoom();
+    if (room == nullptr)
+        return false;
+
+    room->DoAsync(&Room::HandleMove, player, movePkt);
+
+    return true;
 }
 
 bool Handle_C_Skill(PacketSessionRef& session, Protocol::C_Skill& pkt)
 {
-	return true;
+    GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
+    C_Skill skillPkt;
+
+    PlayerRef player = gameSession->_myPlayer;
+    if (player == nullptr)
+        return false;
+
+    RoomRef room = player->GetRoom();
+    if (room == nullptr)
+        return false;
+
+    room->DoAsync(&Room::HandleSkill, player, skillPkt);
+
+    return true;
 }

@@ -1,10 +1,24 @@
 #pragma once
+#include "GameObject.h"
+#include "Enum.pb.h"
+#include "Protocol.pb.h"
 
-class Player
+using PlayerRef = std::shared_ptr<class Player>;
+
+class Player : public GameObject
 {
 public:
-	uint64					playerId = 0;
-	string					name;
-	weak_ptr<GameSession>	ownerSession; // Cycle
-};
+    Player()
+    {
+        SetObjectType(Protocol::GameObjectType::PLAYER);
+    };
 
+    void SetSession(GameSessionRef session) { _ownerSession = session; }
+    GameSessionRef GetSession() { return _ownerSession.lock(); }
+
+    virtual void OnDamaged(GameObjectRef attacker, int damage) override;
+    virtual void OnDead(GameObjectRef attacker) override;
+
+public:
+    weak_ptr<GameSession> _ownerSession;
+};

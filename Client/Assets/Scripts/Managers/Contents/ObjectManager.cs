@@ -51,6 +51,14 @@ public class ObjectManager
         {
             GameObject go = Managers.Resource.Instantiate("Creature/Monster");
             go.name = "Monster";
+
+            if (_objects.ContainsKey(info.ObjectId))
+            {
+                Debug.LogWarning($"ObjectId {info.ObjectId} already exists in _objects");
+                // 필요시 업데이트하거나 리턴
+                return;
+            }
+
             _objects.Add(info.ObjectId, go);
 
             MonsterController mc = go.GetComponent<MonsterController>();

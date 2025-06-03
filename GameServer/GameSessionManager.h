@@ -7,16 +7,19 @@ using GameSessionRef = shared_ptr<GameSession>;
 class GameSessionManager
 {
 public:
-	void	Add(GameSessionRef session);
-	void	Remove(GameSessionRef session);
-	GameSessionRef Find(uint64 sessionId);
+	static GameSessionManager& Instance()
+	{
+		static GameSessionManager instance;
+		return instance;
+	}
 
-	// 전체 메시지
-	void	Broadcast(SendBufferRef sendBuffer);
-
+	GameSessionRef Generate();
+	void Remove(GameSessionRef session);
+	GameSessionRef Find(int32 sessionId);
+	
 private:
+	GameSessionManager() = default;
 	USE_LOCK;
-	unordered_map<uint64, GameSessionRef>	_sessions;
+	int32 _sessionId = 0;
+	unordered_map<int32, GameSessionRef> _sessions;
 };
-
-//extern GameSessionManager GSessionManager;

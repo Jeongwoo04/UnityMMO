@@ -14,4 +14,13 @@
 #include "Enum.pb.h"
 #include "ServerGlobal.h"
 
-using GameSessionRef = shared_ptr <class GameSession>;
+using GameSessionRef = std::shared_ptr<class GameSession>;
+using GameObjectRef = std::shared_ptr<class GameObject>;
+using PlayerRef = std::shared_ptr<class Player>;
+using MonsterRef = std::shared_ptr<class Monster>;
+using ProjectileRef = std::shared_ptr<class Projectile>;
+using ArrowRef = std::shared_ptr<class Arrow>;
+using RoomRef = std::shared_ptr<class Room>;
+using MapRef = std::shared_ptr<class Map>;
+using SkillRef = std::shared_ptr<class Skill>;
+using StatRef = std::shared_ptr<class Stat>;

@@ -23,7 +23,7 @@ template<typename Type>
 using List = list<Type, StlAllocator<Type>>;
 
 template<typename Key, typename Type, typename Pred = less<Key>>
-using Map = map<Key, Type, Pred, StlAllocator<pair<const Key, Type>>>;
+using TMap = map<Key, Type, Pred, StlAllocator<pair<const Key, Type>>>;
 
 template<typename Key, typename Pred = less<Key>>
 using Set = set<Key, Pred, StlAllocator<Key>>;
