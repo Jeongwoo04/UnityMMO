@@ -1,5 +1,6 @@
 #pragma once
 #include "pch.h"
+#include "GameObject.h"
 
 using SkillRef = std::shared_ptr<class Skill>;
 using ProjectileRef = std::shared_ptr<class Projectile>;

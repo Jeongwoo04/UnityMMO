@@ -1,4 +1,5 @@
 #include "pch.h"
+#include "Room.h"
 #include "RoomManager.h"
 
 RoomRef RoomManager::Add(int mapId)

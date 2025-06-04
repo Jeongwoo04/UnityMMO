@@ -4,6 +4,8 @@
 #include "Protocol.pb.h"
 #include "ClientPacketHandler.h"
 #include "DataManager.h"
+#include "RoomManager.h"
+#include "Room.h"
 
 Monster::Monster()
 {
@@ -133,7 +135,7 @@ void Monster::UpdateSkill()
         if (target == nullptr || target->GetRoom() != GetRoom() || target->_statInfo()->hp() == 0)
         {
             SetPlayer(nullptr);
-            _posInfo()->set_state(CreatureState::MOVING);
+            _posInfo()->set_state(CreatureState::IDLE);
             BroadcastMove();
             return;
         }
@@ -144,7 +146,8 @@ void Monster::UpdateSkill()
         bool canUseSkill = (dist <= _skillRange && (dir._x == 0 || dir._y == 0));
         if (canUseSkill == false)
         {
-            _posInfo()->set_state(CreatureState::MOVING);
+            SetPlayer(nullptr);
+            _posInfo()->set_state(CreatureState::IDLE);
             BroadcastMove();
             return;
         }
@@ -187,18 +190,13 @@ void Monster::UpdateSkill()
     _coolTick = 0;
 }
 
-void Monster::OnDead(GameObject attacker)
+void Monster::OnDead(GameObjectRef attacker)
 {
-    S_Die diePkt;
-    diePkt.set_objectid(GetId());
-    diePkt.set_attackerid(attacker.GetId());
+    auto room = GetRoom();
+    if (room == nullptr)
+        return;
 
-    auto sendBuffer = ClientPacketHandler::MakeSendBuffer(diePkt);
-    if (auto room = GetRoom())
-        room->DoAsync(&Room::Broadcast, sendBuffer);
-
-    if (auto room = GetRoom())
-        room->DoAsync(&Room::LeaveGame, GetId());
+    room->DoAsync(&Room::LeaveGame, GetId());
 
     _statInfo()->set_hp(_statInfo()->maxhp());
     _posInfo()->set_state(CreatureState::IDLE);
@@ -206,6 +204,12 @@ void Monster::OnDead(GameObject attacker)
     _posInfo()->set_posx(5);
     _posInfo()->set_posy(5);
 
-    if (auto room = GetRoom())
-        room->DoAsync(&Room::EnterGame, shared_from_this());
+    room->DoAsync(&Room::EnterGame, shared_from_this());
+
+    S_Die diePkt;
+    diePkt.set_objectid(GetId());
+    diePkt.set_attackerid(attacker->GetId());
+
+    auto sendBuffer = ClientPacketHandler::MakeSendBuffer(diePkt);
+    room->DoAsync(&Room::Broadcast, sendBuffer);
 }

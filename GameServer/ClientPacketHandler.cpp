@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "ClientPacketHandler.h"
 #include "GameSession.h"
+#include "GameSessionManager.h"
 #include "Player.h"
 #include "Room.h"
 #include <ctime>
@@ -24,7 +25,6 @@ bool Handle_INVALID(PacketSessionRef& session, BYTE* buffer, int32 len)
 bool Handle_C_Move(PacketSessionRef& session, Protocol::C_Move& pkt)
 {
     GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
-    C_Move movePkt;
 
     PlayerRef player = gameSession->_myPlayer;
     if (player == nullptr)
@@ -34,7 +34,7 @@ bool Handle_C_Move(PacketSessionRef& session, Protocol::C_Move& pkt)
     if (room == nullptr)
         return false;
 
-    room->DoAsync(&Room::HandleMove, player, movePkt);
+    room->DoAsync(&Room::HandleMove, player, pkt);
 
     return true;
 }
@@ -42,7 +42,6 @@ bool Handle_C_Move(PacketSessionRef& session, Protocol::C_Move& pkt)
 bool Handle_C_Skill(PacketSessionRef& session, Protocol::C_Skill& pkt)
 {
     GameSessionRef gameSession = static_pointer_cast<GameSession>(session);
-    C_Skill skillPkt;
 
     PlayerRef player = gameSession->_myPlayer;
     if (player == nullptr)
@@ -52,7 +51,7 @@ bool Handle_C_Skill(PacketSessionRef& session, Protocol::C_Skill& pkt)
     if (room == nullptr)
         return false;
 
-    room->DoAsync(&Room::HandleSkill, player, skillPkt);
+    room->DoAsync(&Room::HandleSkill, player, pkt);
 
     return true;
 }

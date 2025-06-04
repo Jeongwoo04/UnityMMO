@@ -11,14 +11,14 @@ public:
     static GameObjectType GetStaticType() { return GameObjectType::MONSTER; }
 
     // FSM (Finite State Machine)
-    virtual void Update();
+    virtual void Update() override;
 
     virtual void UpdateIdle();
     virtual void UpdateMoving();
     virtual void UpdateSkill();
     virtual void UpdateDead() { }
 
-    virtual void OnDead(GameObject attacker);
+    virtual void OnDead(GameObjectRef attacker) override;
 
     void BroadcastMove();
 

@@ -12,7 +12,7 @@
 
 #include "CorePch.h"
 #include "Enum.pb.h"
-#include "ServerGlobal.h"
+#include <functional>
 
 using GameSessionRef = std::shared_ptr<class GameSession>;
 using GameObjectRef = std::shared_ptr<class GameObject>;

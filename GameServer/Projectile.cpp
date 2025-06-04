@@ -1,5 +1,7 @@
 #include "pch.h"
 #include "Projectile.h"
+#include "RoomManager.h"
+#include "GameObject.h"
 
 Projectile::Projectile()
 {
@@ -8,5 +10,5 @@ Projectile::Projectile()
 
 void Projectile::Update()
 {
-	GameObject::Update();
+
 }

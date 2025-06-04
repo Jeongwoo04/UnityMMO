@@ -205,7 +205,6 @@ CALL $(SolutionDir)Common\Procedures\GenProcs.bat</Command>
     </ClCompile>
     <ClCompile Include="Room.cpp" />
     <ClCompile Include="RoomManager.cpp" />
-    <ClCompile Include="ServerGlobal.cpp" />
     <ClCompile Include="Struct.pb.cc">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">NotUsing</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">NotUsing</PrecompiledHeader>
@@ -242,7 +241,6 @@ CALL $(SolutionDir)Common\Procedures\GenProcs.bat</Command>
     <ClInclude Include="Protocol.pb.h" />
     <ClInclude Include="Room.h" />
     <ClInclude Include="RoomManager.h" />
-    <ClInclude Include="ServerGlobal.h" />
     <ClInclude Include="Struct.pb.h" />
     <ClInclude Include="GameSession.h" />
     <ClInclude Include="GameSessionManager.h" />

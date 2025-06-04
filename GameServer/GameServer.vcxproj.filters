@@ -51,9 +51,6 @@
     <ClCompile Include="ClientPacketHandler.cpp">
       <Filter>Packet</Filter>
     </ClCompile>
-    <ClCompile Include="ServerGlobal.cpp">
-      <Filter>Utils</Filter>
-    </ClCompile>
     <ClCompile Include="GameSession.cpp">
       <Filter>Session</Filter>
     </ClCompile>
@@ -109,9 +106,6 @@
     </ClInclude>
     <ClInclude Include="ClientPacketHandler.h">
       <Filter>Packet</Filter>
-    </ClInclude>
-    <ClInclude Include="ServerGlobal.h">
-      <Filter>Utils</Filter>
     </ClInclude>
     <ClInclude Include="GameSessionManager.h">
       <Filter>Session</Filter>

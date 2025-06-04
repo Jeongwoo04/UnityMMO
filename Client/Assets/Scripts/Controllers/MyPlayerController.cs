@@ -134,6 +134,7 @@ public class MyPlayerController : PlayerController
         {
             C_Move movePacket = new C_Move();
             movePacket.PosInfo = PosInfo;
+            Debug.Log($"C_Move º¸³»±â: x={PosInfo.PosX}, y={PosInfo.PosY}, dir={PosInfo.MoveDir}, state={PosInfo.State}");
             Managers.Network.Send(movePacket);
             _updated = false;
         }

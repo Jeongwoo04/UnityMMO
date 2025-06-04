@@ -6,6 +6,7 @@
 #include "ObjectManager.h"
 #include "RoomManager.h"
 #include "DataManager.h"
+#include "Room.h"
 
 void GameSession::OnConnected()
 {
@@ -31,6 +32,7 @@ void GameSession::OnConnected()
 	}
 
 	RoomRef room = RoomManager::Instance().Find(1);
+	_myPlayer->SetRoom(room);
 	room->DoAsync(&Room::EnterGame, static_pointer_cast<GameObject>(_myPlayer));
 
 	wcout << "OnConnected" << endl;

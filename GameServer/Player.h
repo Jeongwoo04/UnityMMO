@@ -16,8 +16,8 @@ public:
     void SetSession(GameSessionRef session) { _ownerSession = session; }
     GameSessionRef GetSession() { return _ownerSession.lock(); }
 
-    virtual void OnDamaged(GameObjectRef attacker, int damage) override;
-    virtual void OnDead(GameObjectRef attacker) override;
+    virtual void OnDamaged(GameObjectRef attacker, int damage);
+    virtual void OnDead(GameObjectRef attacker);
 
 public:
     weak_ptr<GameSession> _ownerSession;

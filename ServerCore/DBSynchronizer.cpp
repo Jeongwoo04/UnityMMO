@@ -373,7 +373,7 @@ void DBSynchronizer::CompareDBModel()
 		queries.clear();
 
 	// XML에 있는 목록을 우선 갖고 온다.
-	Map<String, DBModel::TableRef> xmlTableMap;
+	TMap<String, DBModel::TableRef> xmlTableMap;
 	for (DBModel::TableRef& xmlTable : _xmlTables)
 		xmlTableMap[xmlTable->_name] = xmlTable;
 
@@ -477,7 +477,7 @@ void DBSynchronizer::ExecuteUpdateQueries()
 void DBSynchronizer::CompareTables(DBModel::TableRef dbTable, DBModel::TableRef xmlTable)
 {
 	// XML에 있는 컬럼 목록을 갖고 온다.
-	Map<String, DBModel::ColumnRef> xmlColumnMap;
+	TMap<String, DBModel::ColumnRef> xmlColumnMap;
 	for (DBModel::ColumnRef& xmlColumn : xmlTable->_columns)
 		xmlColumnMap[xmlColumn->_name] = xmlColumn;
 
@@ -532,7 +532,7 @@ void DBSynchronizer::CompareTables(DBModel::TableRef dbTable, DBModel::TableRef 
 	}
 
 	// XML에 있는 인덱스 목록을 갖고 온다.
-	Map<String, DBModel::IndexRef> xmlIndexMap;
+	TMap<String, DBModel::IndexRef> xmlIndexMap;
 	for (DBModel::IndexRef& xmlIndex : xmlTable->_indexes)
 		xmlIndexMap[xmlIndex->GetUniqueName()] = xmlIndex;
 
@@ -665,7 +665,7 @@ void DBSynchronizer::CompareColumns(DBModel::TableRef dbTable, DBModel::ColumnRe
 void DBSynchronizer::CompareStoredProcedures()
 {
 	// XML에 있는 프로시저 목록을 갖고 온다.
-	Map<String, DBModel::ProcedureRef> xmlProceduresMap;
+	TMap<String, DBModel::ProcedureRef> xmlProceduresMap;
 	for (DBModel::ProcedureRef& xmlProcedure : _xmlProcedures)
 		xmlProceduresMap[xmlProcedure->_name] = xmlProcedure;
 

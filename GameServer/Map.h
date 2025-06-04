@@ -114,7 +114,6 @@ private:
 public:
     int32 _minX, _maxX, _minY, _maxY;
     int32 _sizeX, _sizeY;
-    int32 MaxY, MinX;
     std::vector<std::vector<bool>> _collision;
     std::vector<std::vector<GameObjectRef>> _objects;
 };

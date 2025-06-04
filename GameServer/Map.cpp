@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Map.h"
 #include "GameObject.h"
+#include "Room.h"
 
 GameObjectRef Map::Find(Vector2Int cellPos)
 {
@@ -9,8 +10,8 @@ GameObjectRef Map::Find(Vector2Int cellPos)
     if (cellPos._y < _minY || cellPos._y > _maxY)
         return nullptr;
 
-    int x = cellPos._x - _minX;
-    int y = _maxY - cellPos._y;
+    int32 x = cellPos._x - _minX;
+    int32 y = _maxY - cellPos._y;
     return _objects[y][x];
 }
 
@@ -28,10 +29,12 @@ bool Map::ApplyLeave(GameObjectRef gameObject)
         return false;
 
     {
-        int x = posInfo->posx() - _minX;
-        int y = _maxY - posInfo->posy();
-        if (_objects[y][x] == gameObject)
+        int32 x = posInfo->posx() - _minX;
+        int32 y = _maxY - posInfo->posy();
+        if (_objects[y][x] && _objects[y][x]->GetId() == gameObject->GetId())
+        {
             _objects[y][x] = nullptr;
+        }
     }
 
     return true;
@@ -72,27 +75,20 @@ void Map::LoadMap(int32 mapId, string pathPrefix)
     if (!inFile.is_open())
         return;
 
-    std::wcout << "Stream good? " << inFile.good() << std::endl;
-    std::wcout << "Stream fail? " << inFile.fail() << std::endl;
-    std::wcout << "Stream eof? " << inFile.eof() << std::endl;
-
-    std::wcout << "this = " << this << std::endl;
-    std::wcout << "&_minX = " << &_minX << std::endl;
-
     inFile >> _minX >> _maxX >> _minY >> _maxY;
 
-    int xCount = _maxX - _minX + 1;
-    int yCount = _maxY - _minY + 1;
+    int32 xCount = _maxX - _minX + 1;
+    int32 yCount = _maxY - _minY + 1;
 
     _collision.resize(yCount, std::vector<bool>(xCount, false));
     _objects.resize(yCount, std::vector<GameObjectRef>(xCount, nullptr));
 
     string line;
     getline(inFile, line);
-    for (int y = 0; y < yCount; y++)
+    for (int32 y = 0; y < yCount; y++)
     {
         getline(inFile, line);
-        for (int x = 0; x < xCount; x++)
+        for (int32 x = 0; x < xCount; x++)
         {
             _collision[y][x] = (line[x] == '1' ? true : false);
         }
@@ -105,7 +101,7 @@ void Map::LoadMap(int32 mapId, string pathPrefix)
 vector<Vector2Int> Map::FindPath(Vector2Int startCellPos, Vector2Int destCellPos, bool checkObjects)
 {
     vector<vector<bool>> closed(_sizeY, vector<bool>(_sizeX, false));
-    vector<vector<int>> open(_sizeY, vector<int>(_sizeX, numeric_limits<int>::max()));
+    vector<vector<int32>> open(_sizeY, vector<int32>(_sizeX, numeric_limits<int32>::max()));
     vector<vector<Pos>> parent(_sizeY, vector<Pos>(_sizeX));
 
     priority_queue<PQNode> pq;
@@ -113,13 +109,13 @@ vector<Vector2Int> Map::FindPath(Vector2Int startCellPos, Vector2Int destCellPos
     Pos pos = Cell2Pos(startCellPos);
     Pos dest = Cell2Pos(destCellPos);
 
-    int h = 10 * (abs(dest._y - pos._y) + abs(dest._x - pos._x));
+    int32 h = 10 * (abs(dest._y - pos._y) + abs(dest._x - pos._x));
     open[pos._y][pos._x] = h;
     pq.push({ h, 0, pos._y, pos._x });
     parent[pos._y][pos._x] = pos;
 
-    const int deltaY[4] = { 1, -1, 0, 0 };
-    const int deltaX[4] = { 0, 0, -1, 1 };
+    const int32 deltaY[4] = { 1, -1, 0, 0 };
+    const int32 deltaX[4] = { 0, 0, -1, 1 };
 
     while (!pq.empty()) {
         PQNode node = pq.top(); pq.pop();
@@ -130,7 +126,7 @@ vector<Vector2Int> Map::FindPath(Vector2Int startCellPos, Vector2Int destCellPos
         if (node.Y == dest._y && node.X == dest._x)
             break;
 
-        for (int i = 0; i < 4; ++i) {
+        for (int32 i = 0; i < 4; ++i) {
             Pos next(node.Y + deltaY[i], node.X + deltaX[i]);
             if (!InRange(next))
                 continue;
@@ -139,8 +135,8 @@ vector<Vector2Int> Map::FindPath(Vector2Int startCellPos, Vector2Int destCellPos
             if (closed[next._y][next._x])
                 continue;
 
-            int g = node.G + 10;
-            int h = 10 * ((dest._y - next._y) * (dest._y - next._y) + (dest._x - next._x) * (dest._x - next._x));
+            int32 g = node.G + 10;
+            int32 h = 10 * ((dest._y - next._y) * (dest._y - next._y) + (dest._x - next._x) * (dest._x - next._x));
             if (open[next._y][next._x] <= g + h)
                 continue;
 
@@ -171,12 +167,12 @@ vector<Vector2Int> Map::CalcCellPathFromParent(const vector<vector<Pos>>& parent
 
 Pos Map::Cell2Pos(const Vector2Int& cell)
 {
-    return { MaxY - cell._y, cell._x - MinX };
+    return { _maxY - cell._y, cell._x - _minX };
 }
 
 Vector2Int Map::Pos2Cell(const Pos& pos)
 {
-    return { pos._x + MinX, MaxY - pos._y };
+    return { pos._x + _minX, _maxY - pos._y };
 }
 
 bool Map::InRange(const Pos& pos)

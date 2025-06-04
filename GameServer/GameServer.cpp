@@ -1,5 +1,4 @@
 ﻿#include "pch.h"
-#include "ServerGlobal.h"
 #include "ThreadManager.h"
 #include "Service.h"
 #include "Session.h"
@@ -25,7 +24,7 @@
 
 enum
 {
-	WORKER_TICK = 64,
+	WORKER_TICK = 16,
 	ROOM_UPDATE_TICK = 50
 };
 
@@ -46,6 +45,7 @@ void DoWorkerJob(ServerServiceRef& service)
 	}
 }
 
+/*
 void DoDBWorkerJob()
 {
 	while (true)
@@ -57,6 +57,7 @@ void DoDBWorkerJob()
 		ThreadManager::DoGDBJobQueueWork();
 	}
 }
+*/
 
 void DoRoomUpdateJob()
 {
@@ -64,7 +65,9 @@ void DoRoomUpdateJob()
 	{
 		this_thread::sleep_for(chrono::milliseconds(ROOM_UPDATE_TICK));
 
-		//GRoom->DoAsync(&Room::Update);
+		auto room = RoomManager::Instance().Find(1);
+		if (room)
+			room->ScheduleUpdate(); // 중복 방지 예약
 	}
 }
 
@@ -74,11 +77,8 @@ void InitConsole()
 	SetConsoleOutputCP(CP_UTF8);
 }
 
-#include <filesystem>
 int main()
 {
-	std::cout << "Current path: " << std::filesystem::current_path() << std::endl;
-	ServerGlobal::Init();
 	InitConsole();
 	ConfigManager::Instance().LoadConfig("config.json");
 	DataManager::Instance().LoadData("../Client/Assets/Resources/Data");
@@ -87,13 +87,13 @@ int main()
 
 	RoomRef room = RoomManager::Instance().Add(1);
 
-
-
+	/*
 	ASSERT_CRASH(GDBConnectionPool->Connect(4, L"Driver={SQL Server Native Client 11.0};Server=(localdb)\\MSSQLLocalDB;Database=ServerDb;Trusted_Connection=Yes;charset='UTF8'"));
 	DBConnection* dbConn = GDBConnectionPool->Pop();
 	DBSynchronizer dbSync(*dbConn);
 	dbSync.Synchronize(L"GameDB.xml");
 	GDBConnectionPool->Push(dbConn);
+	*/
 
 	ClientPacketHandler::Init();
 
@@ -112,6 +112,7 @@ int main()
 				DoWorkerJob(service);
 			});
 	}
+	/*
 	for (int32 i = 0; i < 4; i++)
 	{
 		GThreadManager->Launch([]()
@@ -119,6 +120,7 @@ int main()
 				DoDBWorkerJob();
 			});
 	}
+	*/
 
 	GThreadManager->Launch([]()
 		{

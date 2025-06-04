@@ -47,6 +47,8 @@ void Room::Init(int mapId)
 
 void Room::Update()
 {
+    _updateScheduled.store(false);
+
 	for (auto& [id, m] : _monsters)
 	{
 		m->Update();
@@ -55,6 +57,15 @@ void Room::Update()
 	{
 		p->Update();
 	}
+}
+
+void Room::ScheduleUpdate()
+{
+    bool expected = false;
+    if (_updateScheduled.compare_exchange_strong(expected, true))
+    {
+        DoAsync(&Room::Update);
+    }
 }
 
 void Room::EnterGame(GameObjectRef gameObject)
@@ -91,7 +102,7 @@ void Room::EnterGame(GameObjectRef gameObject)
             for (auto& [id, mon] : _monsters)
                 *spawnPkt.add_objects() = mon->_info;
 
-            for (auto& [id, pro] : _monsters)
+            for (auto& [id, pro] : _projectiles)
                 *spawnPkt.add_objects() = pro->_info;
 
             {
@@ -139,11 +150,12 @@ void Room::LeaveGame(int32 objectId)
         auto it = _players.find(objectId);
         if (it == _players.end())
             return;
-        PlayerRef player = it->second;
-        player->SetRoom(nullptr);
-        _players.erase(objectId);
 
+        PlayerRef player = it->second;
+
+        _players.erase(player->GetId());
         _map->ApplyLeave(player);
+        player->SetRoom(nullptr);
 
         // 나에게 정보 전송
         {
@@ -158,10 +170,10 @@ void Room::LeaveGame(int32 objectId)
         if (it == _monsters.end())
             return;
         MonsterRef monster = it->second;
-        monster->SetRoom(nullptr);
-        _monsters.erase(objectId);
 
+        _monsters.erase(objectId);
         _map->ApplyLeave(monster);
+        monster->SetRoom(nullptr);
     }
     else if (type == GameObjectType::PROJECTILE)
     {
@@ -170,8 +182,9 @@ void Room::LeaveGame(int32 objectId)
             return;
 
         ProjectileRef projectile = it->second;
-        projectile->SetRoom(nullptr);
+
         _projectiles.erase(objectId);
+        projectile->SetRoom(nullptr);
     }
 
     // 타인에 정보 전송
@@ -180,7 +193,7 @@ void Room::LeaveGame(int32 objectId)
         despawnPkt.add_objectids(objectId);
         for (auto& [id, p] : _players)
         {
-            if (id != objectId)
+            if (p->GetId() != objectId)
             {
                 auto sendBuffer = ClientPacketHandler::MakeSendBuffer(despawnPkt);
                 p->GetSession()->Send(sendBuffer);
@@ -197,6 +210,8 @@ void Room::Broadcast(SendBufferRef sendBuffer)
     }
 }
 
+#define LOG(level) std::wcout << "[" << #level << "] "
+
 void Room::HandleMove(PlayerRef player, C_Move movePkt)
 {
     if (player == nullptr)
@@ -207,19 +222,36 @@ void Room::HandleMove(PlayerRef player, C_Move movePkt)
     PositionInfo destPosInfo = movePkt.posinfo();
     ObjectInfo info = player->_info;
 
-    // 다른 좌표로 이동할 경우, 체크
+    LOG(INFO) << "[MOVE] PlayerId: " << player->GetId()
+        << " MoveDir: " << destPosInfo.movedir()
+        << " From (" << info.posinfo().posx() << "," << info.posinfo().posy() << ")"
+        << " To (" << destPosInfo.posx() << "," << destPosInfo.posy() << ")" << endl;
+
     if (destPosInfo.posx() != info.posinfo().posx() || destPosInfo.posy() != info.posinfo().posy())
     {
         if (_map->CanGo(Vector2Int(destPosInfo.posx(), destPosInfo.posy())) == false)
+        {
+            LOG(WARNING) << "[MOVE] PlayerId: " << player->GetId()
+                << " tried to move to invalid cell: ("
+                << destPosInfo.posx() << "," << destPosInfo.posy() << ")" << endl;
             return;
+        }
     }
 
-    player->_posInfo()->CopyFrom(movePkt.posinfo());
+    // 다른 좌표로 이동할 경우, 체크
+    //if (destPosInfo.posx() != info.posinfo().posx() || destPosInfo.posy() != info.posinfo().posy())
+    //{
+    //    if (_map->CanGo(Vector2Int(destPosInfo.posx(), destPosInfo.posy())) == false)
+    //        return;
+    //}
+
+    player->_posInfo()->set_state(destPosInfo.state());
+    player->_posInfo()->set_movedir(destPosInfo.movedir());
     _map->ApplyMove(player, Vector2Int(destPosInfo.posx(), destPosInfo.posy()));
 
     // 다른 플레이어에 알려주기
     S_Move resMovePkt;
-    resMovePkt.set_objectid(player->GetId());
+    resMovePkt.set_objectid(player->_info.objectid());
     *resMovePkt.mutable_posinfo() = movePkt.posinfo();
 
     {
@@ -233,14 +265,19 @@ void Room::HandleSkill(PlayerRef player, C_Skill skillPkt)
     if (player == nullptr)
         return;
 
-    if (player->_posInfo()->state() != CreatureState::IDLE)
+    if (player->_posInfo()->state() != CreatureState::IDLE) {
+        LOG(WARNING) << "[SKILL] PlayerId: " << player->GetId()
+            << " tried to cast skill while not idle." << endl;
         return;
-
+    }
     // TODO : 스킬 사용 가능여부 체크
+    const auto& skillInfo = skillPkt.info();
+    LOG(INFO) << "[SKILL] PlayerId: " << player->GetId()
+        << " used SkillId: " << skillInfo.skillid() << endl;
 
     player->_posInfo()->set_state(CreatureState::SKILL);
     S_Skill skill;
-    skill.set_objectid(player->GetId());
+    skill.set_objectid(player->_info.objectid());
     skill.mutable_info()->set_skillid(2);
 
     {
@@ -250,8 +287,11 @@ void Room::HandleSkill(PlayerRef player, C_Skill skillPkt)
 
     SkillRef skillData = nullptr;
     auto it = DataManager::Instance().SkillDict.find(skillPkt.info().skillid());
-    if (it == DataManager::Instance().SkillDict.end())
+    if (it == DataManager::Instance().SkillDict.end()) {
+        LOG(ERROR) << "[SKILL] PlayerId: " << player->GetId()
+            << " used unknown SkillId: " << skillPkt.info().skillid() << endl;
         return;
+    }
     skillData = it->second;
 
     switch (skillData->skillType)
@@ -260,6 +300,10 @@ void Room::HandleSkill(PlayerRef player, C_Skill skillPkt)
     {
         Vector2Int skillPos = player->GetFrontCellPos(player->_posInfo()->movedir());
         GameObjectRef target = _map->Find(skillPos);
+
+        LOG(INFO) << "[SKILL_AUTO] PlayerId: " << player->GetId()
+            << " SkillPos: (" << skillPos._x << "," << skillPos._y << ")"
+            << " Target: " << (target ? target->GetId() : 0) << endl;
         if (target != nullptr)
         {
             //Console.WriteLine("Hit GameObject !");
@@ -270,7 +314,15 @@ void Room::HandleSkill(PlayerRef player, C_Skill skillPkt)
     {
         ArrowRef arrow = ObjectManager::Instance().Add<Arrow>();
         if (arrow == nullptr)
+        {
+            LOG(ERROR) << "[SKILL_PROJECTILE] PlayerId: " << player->GetId()
+                << " failed to create Arrow" << endl;
             return;
+        }
+
+        LOG(INFO) << "[SKILL_PROJECTILE] PlayerId: " << player->GetId()
+            << " FireArrow from (" << player->_posInfo()->posx() << "," << player->_posInfo()->posy() << ")"
+            << " Dir: " << player->_posInfo()->movedir() << endl;
 
         arrow->SetOwner(player);
         arrow->SetData(skillData);

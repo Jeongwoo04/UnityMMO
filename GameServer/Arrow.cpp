@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "ClientPacketHandler.h"
 #include "DataManager.h"
+#include "Room.h"
 
 void Arrow::Update()
 {
@@ -36,7 +37,7 @@ void Arrow::Update()
     else
     {
         GameObjectRef target = room->GetMap()->Find(destPos);
-        if (target != nullptr)
+        if (target != nullptr && target != _owner.lock())
         {
             target->OnDamaged(shared_from_this(), GetOwner()->_statInfo()->attack() + GetData()->damage);
         }
