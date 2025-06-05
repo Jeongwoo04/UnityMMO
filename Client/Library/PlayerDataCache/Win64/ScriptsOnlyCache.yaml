@@ -24,8 +24,6 @@ ScriptsOnlyBuild:
     - UnityEditor.Tilemaps.TilemapPrefabStageHelper
     Unity.AssetManager.Core.Editor.dll:
     - Unity.AssetManager.Core.Editor.ServicesContainer
-    Unity.Cloud.Identity.Editor.Embedded.dll:
-    - Unity.Cloud.IdentityEmbedded.Editor.UnityEditorServiceAuthorizer
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
     UnityEditor.Graphs.dll:
@@ -649,4 +647,4 @@ ScriptsOnlyBuild:
   platform: 19
   scenePathNames:
   - Assets/Scenes/Game.unity
-  playerPath: C:/Users/jeson/MMO_Game/Client/Builds/Win64/Client1/Client1.exe
+  playerPath: C:/Users/jeson/Desktop/UnityServer/Server/Client/Builds/Win64/Client1/Client1.exe

@@ -20,7 +20,6 @@ public:
 
     void Init(int mapId);
     void Update();
-    void ScheduleUpdate();
 
     void EnterGame(GameObjectRef gameObject);
     void LeaveGame(int32 objectId);
@@ -31,6 +30,10 @@ public:
 
     PlayerRef FindPlayer(const function<bool(GameObjectRef)>& condition);
 
+    void ReserveRemoveObjects(int32 objectId);
+
+    void RemoveObjects(int32 id);
+
 public:
 	USE_LOCK;
     int32 _roomId;
@@ -38,11 +41,9 @@ public:
     std::unordered_map<int32, PlayerRef> _players;
     std::unordered_map<int32, MonsterRef> _monsters;
     std::unordered_map<int32, ProjectileRef> _projectiles;
+    std::vector<int32> _removePendingObjects;
 
     MapRef _map;
-
-private:
-    atomic<bool> _updateScheduled = false;
 
 	//unordered_map<uint64, int32>	_lastSentMessageIdPerUser;
 	//Vector<GameSessionRef>	_sessions;

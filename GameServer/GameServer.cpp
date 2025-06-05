@@ -24,8 +24,7 @@
 
 enum
 {
-	WORKER_TICK = 16,
-	ROOM_UPDATE_TICK = 50
+	WORKER_TICK = 50,
 };
 
 void DoWorkerJob(ServerServiceRef& service)
@@ -63,11 +62,9 @@ void DoRoomUpdateJob()
 {
 	while (true)
 	{
-		this_thread::sleep_for(chrono::milliseconds(ROOM_UPDATE_TICK));
+		this_thread::sleep_for(chrono::milliseconds(WORKER_TICK));
 
-		auto room = RoomManager::Instance().Find(1);
-		if (room)
-			room->ScheduleUpdate(); // 중복 방지 예약
+		RoomManager::Instance().UpdateAllRooms();
 	}
 }
 

@@ -82,7 +82,7 @@ void GameObject::OnDamaged(GameObjectRef attacker, int damage)
 	changeHpPkt.set_hp(GetHp());
 
 	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(changeHpPkt);
-	room->DoAsync(&Room::Broadcast, sendBuffer);
+	room->Broadcast(sendBuffer);
 
 	if (GetHp() <= 0)
 	{
@@ -96,7 +96,14 @@ void GameObject::OnDead(GameObjectRef attacker)
 	if (!room)
 		return;
 
-	room->DoAsync(&Room::LeaveGame, GetId());
+	S_Die diePkt;
+	diePkt.set_objectid(GetId());
+	diePkt.set_attackerid(attacker->GetId());
+
+	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(diePkt);
+	room->Broadcast(sendBuffer);
+
+	room->LeaveGame(GetId());
 
 	SetHp(_statInfo()->maxhp());
 	_posInfo()->set_state(CreatureState::IDLE);
@@ -105,11 +112,4 @@ void GameObject::OnDead(GameObjectRef attacker)
 	_posInfo()->set_posy(0);
 
 	room->DoAsync(&Room::EnterGame, shared_from_this());
-
-	S_Die diePkt;
-	diePkt.set_objectid(GetId());
-	diePkt.set_attackerid(attacker->GetId());
-
-	auto sendBuffer = ClientPacketHandler::MakeSendBuffer(diePkt);
-	room->DoAsync(&Room::Broadcast, sendBuffer);
 }

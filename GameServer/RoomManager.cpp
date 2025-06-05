@@ -33,3 +33,11 @@ RoomRef RoomManager::Find(int roomId)
 
     return nullptr;
 }
+
+void RoomManager::UpdateAllRooms()
+{
+    for (auto& [id, room] : _rooms)
+    {
+        room->DoAsync(&Room::Update);
+    }
+}

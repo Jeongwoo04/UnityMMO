@@ -30,7 +30,7 @@ void Arrow::Update()
         *movePkt.mutable_posinfo() = *_posInfo();
 
         auto sendBuffer = ClientPacketHandler::MakeSendBuffer(movePkt);
-        room->DoAsync(&Room::Broadcast, sendBuffer);
+        room->Broadcast(sendBuffer);
 
         //Console.WriteLine("Move Arrow");
     }
@@ -40,9 +40,9 @@ void Arrow::Update()
         if (target != nullptr && target != _owner.lock())
         {
             target->OnDamaged(shared_from_this(), GetOwner()->_statInfo()->attack() + GetData()->damage);
-        }
 
-        // ¼Ò¸ê
-        room->DoAsync(&Room::LeaveGame, GetId());
+        }
+            // ¼Ò¸ê
+        room->LeaveGame(GetId());
     }
 }

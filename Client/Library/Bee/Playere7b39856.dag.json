@@ -273,7 +273,7 @@
       "DisplayName": "Writing boot.config_tyr4.info",
       "ActionType": "WriteFile",
       "PayloadOffset": 83,
-      "PayloadLength": 15400,
+      "PayloadLength": 15544,
       "PayloadDebugContentSnippet": "{\"System.Object\":null,\"Bee.Tun",
       "Inputs": [],
       "Outputs": [
@@ -366,14 +366,14 @@
         "C:/Program Files/Unity/Hub/Editor/2022.3.61f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/Variations/mono/Managed/UnityEngine.WindModule.dll",
         "C:/Program Files/Unity/Hub/Editor/2022.3.61f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/Variations/mono/Managed/UnityEngine.XRModule.dll",
         "C:/Program Files/Unity/Hub/Editor/2022.3.61f1/Editor/Data/PlaybackEngines/WindowsStandaloneSupport/Variations/mono/Managed/UnityEngine.dll",
-        "C:/Users/jeson/MMO_Game/Client/Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.dll",
-        "C:/Users/jeson/MMO_Game/Client/Library/Bee/PlayerScriptAssemblies/Unity.AI.Navigation.dll",
-        "C:/Users/jeson/MMO_Game/Client/Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.dll",
-        "C:/Users/jeson/MMO_Game/Client/Library/Bee/PlayerScriptAssemblies/Unity.Timeline.dll",
-        "C:/Users/jeson/MMO_Game/Client/Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.dll",
-        "C:/Users/jeson/MMO_Game/Client/Assets/Libs/System.Runtime.CompilerServices.Unsafe.dll",
-        "C:/Users/jeson/MMO_Game/Client/Library/PackageCache/com.unity.nuget.newtonsoft-json@3.2.1/Runtime/AOT/Newtonsoft.Json.dll",
-        "C:/Users/jeson/MMO_Game/Client/Assets/Libs/Google.Protobuf.dll",
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.dll",
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/Bee/PlayerScriptAssemblies/Unity.AI.Navigation.dll",
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.dll",
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/Bee/PlayerScriptAssemblies/Unity.Timeline.dll",
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.dll",
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Assets/Libs/System.Runtime.CompilerServices.Unsafe.dll",
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/PackageCache/com.unity.nuget.newtonsoft-json@3.2.1/Runtime/AOT/Newtonsoft.Json.dll",
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Assets/Libs/Google.Protobuf.dll",
         "C:/Program Files/Unity/Hub/Editor/2022.3.61f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32/Facades/System.Memory.dll",
         "C:/Program Files/Unity/Hub/Editor/2022.3.61f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32/Facades/netstandard.dll",
         "C:/Program Files/Unity/Hub/Editor/2022.3.61f1/Editor/Data/MonoBleedingEdge/lib/mono/unityjit-win32/Mono.Security.dll",
@@ -1280,7 +1280,7 @@
       "DisplayName": "Copying Assembly-CSharp.dll",
       "ActionType": "CopyFiles",
       "Inputs": [
-        "C:/Users/jeson/MMO_Game/Client/Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.dll"
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/Bee/PlayerScriptAssemblies/Assembly-CSharp.dll"
       ],
       "Outputs": [
         "Builds/Win64/Client1/Client1_Data/Managed/Assembly-CSharp.dll"
@@ -1292,7 +1292,7 @@
       "DisplayName": "Copying Unity.AI.Navigation.dll",
       "ActionType": "CopyFiles",
       "Inputs": [
-        "C:/Users/jeson/MMO_Game/Client/Library/Bee/PlayerScriptAssemblies/Unity.AI.Navigation.dll"
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/Bee/PlayerScriptAssemblies/Unity.AI.Navigation.dll"
       ],
       "Outputs": [
         "Builds/Win64/Client1/Client1_Data/Managed/Unity.AI.Navigation.dll"
@@ -1304,7 +1304,7 @@
       "DisplayName": "Copying UnityEngine.UI.dll",
       "ActionType": "CopyFiles",
       "Inputs": [
-        "C:/Users/jeson/MMO_Game/Client/Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.dll"
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/Bee/PlayerScriptAssemblies/UnityEngine.UI.dll"
       ],
       "Outputs": [
         "Builds/Win64/Client1/Client1_Data/Managed/UnityEngine.UI.dll"
@@ -1316,7 +1316,7 @@
       "DisplayName": "Copying Unity.Timeline.dll",
       "ActionType": "CopyFiles",
       "Inputs": [
-        "C:/Users/jeson/MMO_Game/Client/Library/Bee/PlayerScriptAssemblies/Unity.Timeline.dll"
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/Bee/PlayerScriptAssemblies/Unity.Timeline.dll"
       ],
       "Outputs": [
         "Builds/Win64/Client1/Client1_Data/Managed/Unity.Timeline.dll"
@@ -1328,7 +1328,7 @@
       "DisplayName": "Copying Unity.TextMeshPro.dll",
       "ActionType": "CopyFiles",
       "Inputs": [
-        "C:/Users/jeson/MMO_Game/Client/Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.dll"
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/Bee/PlayerScriptAssemblies/Unity.TextMeshPro.dll"
       ],
       "Outputs": [
         "Builds/Win64/Client1/Client1_Data/Managed/Unity.TextMeshPro.dll"
@@ -1340,7 +1340,7 @@
       "DisplayName": "Copying System.Runtime.CompilerServices.Unsafe.dll",
       "ActionType": "CopyFiles",
       "Inputs": [
-        "C:/Users/jeson/MMO_Game/Client/Assets/Libs/System.Runtime.CompilerServices.Unsafe.dll"
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Assets/Libs/System.Runtime.CompilerServices.Unsafe.dll"
       ],
       "Outputs": [
         "Builds/Win64/Client1/Client1_Data/Managed/System.Runtime.CompilerServices.Unsafe.dll"
@@ -1352,7 +1352,7 @@
       "DisplayName": "Copying Newtonsoft.Json.dll",
       "ActionType": "CopyFiles",
       "Inputs": [
-        "C:/Users/jeson/MMO_Game/Client/Library/PackageCache/com.unity.nuget.newtonsoft-json@3.2.1/Runtime/AOT/Newtonsoft.Json.dll"
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/PackageCache/com.unity.nuget.newtonsoft-json@3.2.1/Runtime/AOT/Newtonsoft.Json.dll"
       ],
       "Outputs": [
         "Builds/Win64/Client1/Client1_Data/Managed/Newtonsoft.Json.dll"
@@ -1364,7 +1364,7 @@
       "DisplayName": "Copying Google.Protobuf.dll",
       "ActionType": "CopyFiles",
       "Inputs": [
-        "C:/Users/jeson/MMO_Game/Client/Assets/Libs/Google.Protobuf.dll"
+        "C:/Users/jeson/Desktop/UnityServer/Server/Client/Assets/Libs/Google.Protobuf.dll"
       ],
       "Outputs": [
         "Builds/Win64/Client1/Client1_Data/Managed/Google.Protobuf.dll"
@@ -1639,7 +1639,7 @@
       "Annotation": "WriteText Library/Bee/artifacts/WinPlayerBuildProgram/Data/app.info",
       "DisplayName": "Writing app.info",
       "ActionType": "WriteFile",
-      "PayloadOffset": 15572,
+      "PayloadOffset": 15716,
       "PayloadLength": 24,
       "PayloadDebugContentSnippet": "DefaultCompany\nMMO_Unity",
       "Inputs": [],
@@ -2303,6 +2303,6 @@
   "SharedResources": [],
   "Scanners": [],
   "Identifier": "Library/Bee/Playere7b39856.dag.json",
-  "PayloadsFile": "C:/Users/jeson/MMO_Game/Client/Library/Bee/Playere7b39856.dag.payloads",
+  "PayloadsFile": "C:/Users/jeson/Desktop/UnityServer/Server/Client/Library/Bee/Playere7b39856.dag.payloads",
   "RelativePathToRoot": "../.."
 }

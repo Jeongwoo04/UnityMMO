@@ -100,13 +100,9 @@ SendBufferChunkRef SendBufferManager::Pop()
 			SendBufferChunkRef sendBufferChunk = _sendBufferChunks.back();
 			_sendBufferChunks.pop_back();
 
-			wcout << L"[SendBufferManager] Pop(): Reusing chunk from pool. Pool size now: " << _sendBufferChunks.size() << endl;
-
 			return sendBufferChunk;
 		}
 	}
-
-	wcout << L"[SendBufferManager] Pop(): Pool empty, creating new chunk." << endl;
 
 	return SendBufferChunkRef(xnew<SendBufferChunk>(), PushGlobal); // 여유분이 없어 새로 만들자
 	// MemoryPool과 다른점 -> refCount가 0이 될때
@@ -118,12 +114,9 @@ void SendBufferManager::Push(SendBufferChunkRef buffer)
 {
 	WRITE_LOCK;
 	_sendBufferChunks.push_back(buffer);
-
-	wcout << L"[SendBufferManager] Push(): Chunk returned to pool. Pool size now: " << _sendBufferChunks.size() << endl;
 }
 
 void SendBufferManager::PushGlobal(SendBufferChunk* buffer)
 {
-	wcout << L"[SendBufferManager] PushGlobal(): Chunk is being globally returned." << endl;
 	GSendBufferManager->Push(SendBufferChunkRef(buffer, PushGlobal));
 }

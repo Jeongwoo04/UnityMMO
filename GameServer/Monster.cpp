@@ -121,7 +121,7 @@ void Monster::BroadcastMove()
     if (auto room = GetRoom())
     {
         auto sendBuffer = ClientPacketHandler::MakeSendBuffer(movePkt);
-        room->DoAsync(&Room::Broadcast, sendBuffer);
+        room->Broadcast(sendBuffer);
     }
 }
 
@@ -177,7 +177,7 @@ void Monster::UpdateSkill()
         if (auto room = GetRoom())
         {
             auto sendBuffer = ClientPacketHandler::MakeSendBuffer(skillPkt);
-            room->DoAsync(&Room::Broadcast, sendBuffer);
+            room->Broadcast(sendBuffer);
         }
 
         // 스킬 쿨타임 적용
@@ -196,7 +196,14 @@ void Monster::OnDead(GameObjectRef attacker)
     if (room == nullptr)
         return;
 
-    room->DoAsync(&Room::LeaveGame, GetId());
+    S_Die diePkt;
+    diePkt.set_objectid(GetId());
+    diePkt.set_attackerid(attacker->GetId());
+
+    auto sendBuffer = ClientPacketHandler::MakeSendBuffer(diePkt);
+    room->Broadcast(sendBuffer);
+
+    room->LeaveGame(GetId());
 
     _statInfo()->set_hp(_statInfo()->maxhp());
     _posInfo()->set_state(CreatureState::IDLE);
@@ -205,11 +212,4 @@ void Monster::OnDead(GameObjectRef attacker)
     _posInfo()->set_posy(5);
 
     room->DoAsync(&Room::EnterGame, shared_from_this());
-
-    S_Die diePkt;
-    diePkt.set_objectid(GetId());
-    diePkt.set_attackerid(attacker->GetId());
-
-    auto sendBuffer = ClientPacketHandler::MakeSendBuffer(diePkt);
-    room->DoAsync(&Room::Broadcast, sendBuffer);
 }
